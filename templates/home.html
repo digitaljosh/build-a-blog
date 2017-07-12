@@ -3,15 +3,23 @@
 {% block content %}
 
 
-    <h1 id="main-title">Build a Blog</h1>
+    <h1 id="main-title">{{ main_title }}</h1>
 
     
-
+    {% if main_title == "Build a Blog" %}
         {% for b in blog %}
         <h2><a href="/?id={{ b.id }}">{{ b.title }}</a></h2>
         <p>{{ b.body }}</p>
         <hr>
         {% endfor %}
+    {% endif %}
+
+    
+    <h2><a href="/?id={{ blog.id }}">{{ main_title }}</a></h2>
+    <p>{{ body }}</p>
+    <hr>
+
+
         
 
 

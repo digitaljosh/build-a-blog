@@ -21,16 +21,34 @@ class Blog(db.Model):
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
+    if request.method=='GET':
+        blog_id = request.args.get('id')
+        if blog_id:
+            blog = Blog.query.filter_by(id=blog_id).all()
+            selected_blog = Blog.query.filter_by(id=blog_id).first()
+            return render_template('home.html', blog=blog, body=selected_blog.body, main_title=selected_blog.title)
+
+        blog = Blog.query.all()
+        main_title = "Build a Blog"
+        return render_template('home.html', blog=blog, main_title=main_title)
+        
+        
+
+
     error_title = "Please fill in the title"
     error_body = "Please fill in the body"
 
     if request.method == 'POST':
+        
+        
         title = request.form['title']
         body = request.form['body']
         if title and body != "":    
             new_post = Blog(title,body)
             db.session.add(new_post)
             db.session.commit()
+            return redirect("/?id=" + str(new_post.id))
+            #return render_template('home.html', body=new_post.body, blog=new_post, main_title=new_post.title)
 
         if body == "":
                 return render_template('/newpost.html', error_body=error_body)
@@ -38,14 +56,12 @@ def index():
         if title == "":
             return render_template('/newpost.html', error_title=error_title)
 
-    #if request.method == 'GET':
 
-        #query_params = request.args.get('body')
-        #return render_template('home.html' + query_params)
+
 
     blog = Blog.query.all()
-    #print(blog)
-    return render_template('home.html', blog=blog)
+    main_title = "Build a Blog"
+    return render_template('home.html', blog=blog, main_title=main_title)
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
