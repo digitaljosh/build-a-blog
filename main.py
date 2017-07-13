@@ -20,53 +20,46 @@ class Blog(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    '''route for homepage, checks against GET or POST requests, validates user input, displays applicable errors, submits info to db if no errors'''
 
-    if request.method=='GET':
-        blog_id = request.args.get('id')
-        if blog_id:
-            blog = Blog.query.filter_by(id=blog_id).all()
-            selected_blog = Blog.query.filter_by(id=blog_id).first()
-            return render_template('home.html', blog=blog, body=selected_blog.body, main_title=selected_blog.title)
-
-        blog = Blog.query.all()
-        main_title = "Build a Blog"
-        return render_template('home.html', blog=blog, main_title=main_title)
+    if request.method=='GET': # checks for GET request
+        blog_id = request.args.get('id') # grabs blog id from query params
+        if blog_id: # if query params exist...
+            blog = Blog.query.filter_by(id=blog_id).first() # matches query param blog id with blog post in db 
+            #selected_blog = Blog.query.filter_by(id=blog_id).first() 
+            return render_template('home.html', blog_id=blog_id, body=blog.body, main_title=blog.title) # renders template with single blog post
+        
+        # if there are no query params in GET request, display ALL blogs
+        blog = Blog.query.all() # gets all blog posts from db
+        main_title = "Build a Blog" 
+        return render_template('home.html', blog=blog, main_title=main_title) # renders template on /home with ALL blog posts
         
         
-
 
     error_title = "Please fill in the title"
     error_body = "Please fill in the body"
 
-    if request.method == 'POST':
+    if request.method == 'POST': # checks to see if user submitted blog post data
         
-        
-        title = request.form['title']
-        body = request.form['body']
-        if title and body != "":    
-            new_post = Blog(title,body)
-            db.session.add(new_post)
-            db.session.commit()
-            return redirect("/?id=" + str(new_post.id))
-            #return render_template('home.html', body=new_post.body, blog=new_post, main_title=new_post.title)
+        title = request.form['title'] # grabs user input for blog title
+        body = request.form['body'] # grabs user input for blog body
+        if title and body != "": # checks to see if content has been entered   
+            new_post = Blog(title,body) # storing blog title and body in a new variable
+            db.session.add(new_post) # adding new blog post to session
+            db.session.commit() # committing new blog post to db
+            return redirect("/?id=" + str(new_post.id)) # redirects user to home page that only displays the newly submitted post
 
-        if body == "":
-                return render_template('/newpost.html', error_body=error_body)
+        if body == "": # shows error if no input for blog body
+            return render_template('/newpost.html', error_body=error_body)
 
-        if title == "":
+        if title == "": # shows error if no input for blog title
             return render_template('/newpost.html', error_title=error_title)
 
 
 
-
-    blog = Blog.query.all()
-    main_title = "Build a Blog"
-    return render_template('home.html', blog=blog, main_title=main_title)
-
-
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
-
+    '''route for newpost, renders newpost template'''
 
     return render_template('newpost.html')
 
