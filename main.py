@@ -20,7 +20,11 @@ class Blog(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    '''route for homepage, checks against GET or POST requests, validates user input, displays applicable errors, submits info to db if no errors'''
+
+    '''
+    route for homepage, checks against GET or POST requests, validates user input, displays applicable errors, submits info to db if no errors
+    
+    '''
 
     if request.method=='GET': # checks for GET request
         blog_id = request.args.get('id') # grabs blog id from query params
@@ -59,7 +63,11 @@ def index():
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
-    '''route for newpost, renders newpost template'''
+
+    '''
+    route for newpost, renders newpost template
+    
+    '''
 
     return render_template('newpost.html')
 
