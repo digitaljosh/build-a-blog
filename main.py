@@ -18,6 +18,10 @@ class Blog(db.Model):
         self.body = body
 
 
+#TODO add helper functions, clean up /home
+#TODO flash messages
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
