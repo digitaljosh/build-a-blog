@@ -3,7 +3,7 @@
 Testing Plan:
 1. Clone project into new directory
 2. If necessary, install pymysql and sqlalchemy into your virtual environment
-3. Open MAMP and add user account:
+3. Initialize MAMP and open start page to add user account:
 
    username: build-a-blog
    
